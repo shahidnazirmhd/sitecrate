@@ -1,13 +1,23 @@
 {% extends "config/base.html" %}
 {% load static %}
 
-{% block title %}Posts{% endblock %}
+{% block title %}All Posts{% endblock %}
 
 {% block stylesheet %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static "css/blog/main.css" %}">
+    <link rel="stylesheet" href="{% static "css/blog/post.css" %}">
+    <link rel="stylesheet" href="{% static "css/blog/all-posts.css" %}">
 {% endblock %}
 
 {% block body %}
-<h1>All Posts</h1>
+{% include "blog/includes/header.html" %}
+<section id="all-posts">
+  <h2>My Collected Posts</h2>
+
+  <ul>
+    {% for post in all_posts %}
+      {% include "blog/includes/post.html" %}
+    {% endfor %}
+  </ul>
+</section>
 {% endblock %}

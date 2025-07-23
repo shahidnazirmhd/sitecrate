@@ -1,13 +1,25 @@
 {% extends "config/base.html" %}
 {% load static %}
 
-{% block title %}Post Detail{% endblock %}
+{% block title %}{{ post.title }}{% endblock %}
 
 {% block stylesheet %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static "css/blog/main.css" %}">
+    <link rel="stylesheet" href="{% static "css/blog/post-detail.css" %}">
 {% endblock %}
 
 {% block body %}
-<h1>POST IN DETAIL</h1>
+{% include "blog/includes/header.html" %}
+<section id="summary">
+  <h2>{{ post.title }}</h2>
+  <article>
+    <img src="{% static "images/blog/"|add:post.image %}" alt="Post Title" />
+    <address>By {{ post.author }}</address>
+    <div>Last updated on <time>{{ post.date|date:"d M Y" }}</time></div>
+  </article>
+</section>
+
+<main>
+  {{ post.content|linebreaks }}
+</main>
 {% endblock %}
