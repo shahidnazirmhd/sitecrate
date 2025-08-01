@@ -24,6 +24,7 @@ class Tag(models.Model):
     
 def image_upload_path(instance, filename):
         ext = filename.split('.')[-1]
+        # app_label = instance._meta.app_label
         return f"blog/post/{uuid4().hex}.{ext}"
 
 

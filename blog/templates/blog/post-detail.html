@@ -1,7 +1,8 @@
 {% extends "config/base.html" %}
 {% load static %}
+{% load tz %}
 
-{% block title %}{{ post.title }}{% endblock %}
+{% block title %}{{ post.title|title }}{% endblock %}
 
 {% block stylesheet %}
     {{ block.super }}
@@ -11,11 +12,16 @@
 {% block body %}
 {% include "blog/includes/header.html" %}
 <section id="summary">
-  <h2>{{ post.title }}</h2>
+  <h2>{{ post.title|title }}</h2>
   <article>
-    <img src="{% static "images/blog/"|add:post.image %}" alt="Post Title" />
+    {% comment %} <img src="{% static "images/blog/"|add:post.image %}" alt="Post Title" /> {% endcomment %}
+    <img src="{{ post.image.url }}" alt="{{ post.title }}">
     <address>By {{ post.author }}</address>
-    <div>Last updated on <time>{{ post.date|date:"d M Y" }}</time></div>
+    <div>Last updated on 
+      <time class="utc" datetime="{{ post.updated_at|date:'c' }}">
+        {{ post.updated_at|localtime|date:"d M Y, h:i A" }}
+      </time>
+    </div>
   </article>
 </section>
 
