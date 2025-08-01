@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.utils.text import slugify
 
@@ -44,7 +46,7 @@ class Post(models.Model):
     
 
     def save(self, *args, **kwargs):
-    # Check if the object is new or title changed
+        # Handle slug generation if new or title changed
         if not self.slug or self._title_changed():
             base_slug = slugify(self.title)
             slug = base_slug
@@ -53,13 +55,25 @@ class Post(models.Model):
                 slug = f"{base_slug}-{counter}"
                 counter += 1
             self.slug = slug
+
+        # Handle deleting old image file if image changed
+        if self.pk:
+            try:
+                old = Post.objects.get(pk=self.pk)
+                if old.image and old.image != self.image:
+                    if os.path.isfile(old.image.path):
+                        os.remove(old.image.path)
+            except Post.DoesNotExist:
+                pass  # Object is new, no old image
+
         super().save(*args, **kwargs)
 
     def _title_changed(self):
-        if not self.pk:
-            return True  # New object, title "changed" by default
-        old_title = Post.objects.get(pk=self.pk).title
-        return old_title != self.title
+        try:
+            old_title = Post.objects.get(pk=self.pk).title
+            return old_title != self.title
+        except Post.DoesNotExist:
+            return True  # New object, so considered changed
 
     class Meta:
         ordering = ['-created_at'] # latest posts first
