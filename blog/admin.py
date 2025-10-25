@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 
 
-from .models import Author, Post, Tag
+from .models import Author, Post, Tag, Comment
 
 
 class AuthorAdmin(admin.ModelAdmin):
@@ -40,6 +40,12 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ("caption",)
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_filter = ("post",)
+    list_display = ("user_name", "post",)
+
+
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(Comment, CommentAdmin)
