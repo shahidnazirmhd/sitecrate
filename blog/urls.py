@@ -8,4 +8,5 @@ urlpatterns = [
     path("", views.BlogIndexView.as_view(), name="blog-index"),
     path("posts/", views.AllPostsView.as_view(), name="blog-all-posts"),
     path("posts/<slug:slug>/", views.DetailPostView.as_view(), name="blog-post-detail"),
+    path("read-later", views.ReadLaterView.as_view(), name="post-read-later"),
 ]
