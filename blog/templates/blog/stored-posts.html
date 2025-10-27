@@ -1,0 +1,24 @@
+{% extends "config/base.html" %}
+{% load static %}
+
+{% block title %}Stored Posts{% endblock %}
+
+{% block stylesheet %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "css/blog/stored-posts.css" %}">
+{% endblock %}
+
+{% block body %}
+{% include "blog/includes/header.html" %}
+<section id="stored-posts">
+    {% if not has_posts %}
+        <p> You don't have any read later posts.</p>
+    {% endif %}
+    <ul>
+    {% for post in posts %}
+        <li><a href="{%url "blog-post-detail" slug=post.slug %}">{{ post.title|title }}</a></li>
+    {% endfor %}
+    </ul>
+</section>
+
+{% endblock %}
