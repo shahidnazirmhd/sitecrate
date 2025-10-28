@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from os import getenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,26 +21,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY = getenv("SECRET_KEY")
 SECRET_KEY = "django-insecure-f@o3brqjx*n2&31$2fxz#8af2uon7qa&fn+p1@erhm@tq!%f6r"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv("IS_PRODUCTION", True)
 
 # Allow all subdomains of app.github.dev (Codespaces URLs)
 ALLOWED_HOSTS = [
-    ".app.github.dev",
+   getenv("APP_HOST")
 ]
 
-# Trust the proxy headers for host and scheme (required in Codespaces and some proxies)
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# # Trust the proxy headers for host and scheme (required in Codespaces and some proxies)
+# USE_X_FORWARDED_HOST = True
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-# Trusted origins for CSRF protection (Codespaces wildcard + local dev)
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.app.github.dev",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
+# # Trusted origins for CSRF protection (Codespaces wildcard + local dev)
+# CSRF_TRUSTED_ORIGINS = [
+#     "https://*.app.github.dev",
+#     "http://localhost:8000",
+#     "http://127.0.0.1:8000",
+# ]
 
 
 
@@ -132,6 +134,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATIC_URL = "static/"
 
