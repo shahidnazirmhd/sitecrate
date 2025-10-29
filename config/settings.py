@@ -28,7 +28,7 @@ DEBUG = getenv("IS_DEVELOPMENT", True)
 
 # Allow all subdomains of app.github.dev (Codespaces URLs)
 ALLOWED_HOSTS = [
-   getenv("APP_HOST")
+   getenv("APP_HOST"), "localhost", "127.0.0.1"
 ]
 
 # # Trust the proxy headers for host and scheme (required in Codespaces and some proxies)
