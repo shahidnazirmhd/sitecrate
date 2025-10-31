@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-from os import getenv
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,14 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = getenv("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv("IS_DEVELOPMENT", True)
+DEBUG = os.environ.get("IS_DEVELOPMENT", True)
 
 # Allow all subdomains of app.github.dev (Codespaces URLs)
 ALLOWED_HOSTS = [
-   getenv("APP_HOST"), "localhost", "127.0.0.1"
+   os.environ.get("APP_HOST")
 ]
 
 # # Trust the proxy headers for host and scheme (required in Codespaces and some proxies)
@@ -95,11 +95,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": getenv("DB_NAME"),
-        "USER": getenv("DB_USER"),
-        "PASSWORD": getenv("DB_PASSWORD"),
-        "HOST": getenv("DB_HOST"),
-        "PORT": getenv("DB_PORT"),
+        "NAME": os.environ.get("RDS_DB_NAME"),
+        "USER": os.environ.get("RDS_USERNAME"),
+        "PASSWORD": os.environ.get("RDS_PASSWORD"),
+        "HOST": os.environ.get("RDS_HOSTNAME"),
+        "PORT": os.environ.get("RDS_PORT"),
     }
 }
 
