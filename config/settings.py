@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("IS_DEVELOPMENT", True)
+DEBUG = os.environ.get("IS_DEVELOPMENT", "True") == "True"
 
 # Allow all subdomains of app.github.dev (Codespaces URLs)
 ALLOWED_HOSTS = [
@@ -92,16 +92,26 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("RDS_DB_NAME"),
-        "USER": os.environ.get("RDS_USERNAME"),
-        "PASSWORD": os.environ.get("RDS_PASSWORD"),
-        "HOST": os.environ.get("RDS_HOSTNAME"),
-        "PORT": os.environ.get("RDS_PORT"),
+if DEBUG:
+    # Use SQLite for development
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    # Use PostgreSQL for production (EB RDS)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("RDS_DB_NAME"),
+            "USER": os.environ.get("RDS_USERNAME"),
+            "PASSWORD": os.environ.get("RDS_PASSWORD"),
+            "HOST": os.environ.get("RDS_HOSTNAME"),
+            "PORT": os.environ.get("RDS_PORT", "5432"),
+        }
+    }
 
 
 # Password validation
