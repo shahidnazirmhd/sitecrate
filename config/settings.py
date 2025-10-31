@@ -28,7 +28,7 @@ DEBUG = os.environ.get("IS_DEVELOPMENT", "True") == "True"
 
 # Allow all subdomains of app.github.dev (Codespaces URLs)
 ALLOWED_HOSTS = [
-   os.environ.get("APP_HOST")
+   os.environ.get("APP_HOST"), "localhost"
 ]
 
 # # Trust the proxy headers for host and scheme (required in Codespaces and some proxies)
