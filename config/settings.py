@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "config",
     "blog",
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -93,17 +94,26 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Use PostgreSQL for production (EB RDS)
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("RDS_DB_NAME"),
-        "USER": os.environ.get("RDS_USERNAME"),
-        "PASSWORD": os.environ.get("RDS_PASSWORD"),
-        "HOST": os.environ.get("RDS_HOSTNAME"),
-        "PORT": os.environ.get("RDS_PORT", "5432"),
+if DEBUG:
+    # Use SQLite for development
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    # Use PostgreSQL for production (EB RDS)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("RDS_DB_NAME"),
+            "USER": os.environ.get("RDS_USERNAME"),
+            "PASSWORD": os.environ.get("RDS_PASSWORD"),
+            "HOST": os.environ.get("RDS_HOSTNAME"),
+            "PORT": os.environ.get("RDS_PORT", "5432"),
+        }
+    }
 
 
 # Password validation
@@ -150,9 +160,19 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-MEDIA_URL = "media/"
+# MEDIA_URL = "media/"
 
 MEDIA_ROOT = BASE_DIR / "media"
+
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+AWS_QUERYSTRING_AUTH = False
+
+MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{os.environ.get('AWS_MEDIA_PREFIX','media')}/"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
